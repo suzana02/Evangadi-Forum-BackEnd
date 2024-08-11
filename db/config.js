@@ -1,27 +1,29 @@
-
-
-// require("dotenv").config();
-// const mysql2 = require("mysql2");
-
-// const dbConnection = mysql2.createPool({
-// 	socketPath: "/Applications/MAMP/tmp/mysql/mysql.sock",
-// 	user: "evangadi-admin",
-// 	database: "evangadi-db",
-// 	host: "localhost",
-
-// 	password: "1234567",
-// 	connectionLimit: 10,
-// });
+require("dotenv").config();
 const mysql2 = require("mysql2");
 
 const dbConnection = mysql2.createPool({
-	socketPath: "/Applications/MAMP/tmp/mysql/mysql.sock",
-	user: process.env.USER,
-	database: process.env.DATABASE,
-	Host: process.env.HOST,
-	password: process.env.PASSWORD,
-	connectionLimit: 10,
+	socketPath: process.env.DB_SOCKET_PATH,
+	host: process.env.DB_HOST,
+	user: process.env.DB_USER,
+	password: process.env.DB_PASSWORD,
+	database: process.env.DB_DATABASE,
+	connectionLimit: parseInt(process.env.DB_CONNECTION_LIMIT, 10),
 });
 
-
+// const dbConnection = mysql2.createPool({
+// 	socketPath: "/Applications/MAMP/tmp/mysql/mysql.sock",
+// 	host: "localhost",
+// 	user: "evangadi-admin",
+// 	password: "1234567",
+// 	database: "evangadi-db",
+// 	connectionLimit: 10,
+// });
+// Test the connection
+dbConnection.execute("SELECT 1", (err, result) => {
+	if (err) {
+		console.error("Database connection error:", err.message);
+	} else {
+		console.log("Test query result:", result);
+	}
+});
 module.exports = dbConnection.promise();
